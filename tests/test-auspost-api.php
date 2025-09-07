@@ -1,6 +1,18 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+if ( ! class_exists( 'WP_Error' ) ) {
+    class WP_Error {
+        public $errors = [];
+
+        public function __construct( $code = '', $message = '', $data = null ) {
+            if ( $code ) {
+                $this->errors[ $code ] = [ $message ];
+            }
+        }
+    }
+}
+
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -75,5 +87,38 @@ class AuspostAPITest extends TestCase
         $this->assertSame([
             ['code' => 'EXP', 'name' => 'Express', 'price' => 10.0],
         ], $rates);
+    }
+
+    public function test_build_request_url_missing_from_postcode_returns_error()
+    {
+        $api    = new Auspost_API();
+        $result = $api->build_request_url([
+            'to_postcode' => '4000',
+            'weight'      => 1,
+        ]);
+
+        $this->assertInstanceOf(WP_Error::class, $result);
+    }
+
+    public function test_build_request_url_missing_to_postcode_returns_error()
+    {
+        $api    = new Auspost_API();
+        $result = $api->build_request_url([
+            'from_postcode' => '3000',
+            'weight'        => 1,
+        ]);
+
+        $this->assertInstanceOf(WP_Error::class, $result);
+    }
+
+    public function test_build_request_url_missing_weight_returns_error()
+    {
+        $api    = new Auspost_API();
+        $result = $api->build_request_url([
+            'from_postcode' => '3000',
+            'to_postcode'   => '4000',
+        ]);
+
+        $this->assertInstanceOf(WP_Error::class, $result);
     }
 }
