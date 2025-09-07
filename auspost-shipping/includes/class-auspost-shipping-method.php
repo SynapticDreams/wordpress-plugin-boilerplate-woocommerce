@@ -72,11 +72,12 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
          * @param array $package Shipping package data.
          */
         public function calculate_shipping( $package = array() ) {
-            $from_postcode = WC()->countries->get_base_postcode();
-            $to_postcode   = isset( $package['destination']['postcode'] ) ? $package['destination']['postcode'] : '';
-            $weight        = isset( $package['contents_weight'] ) ? $package['contents_weight'] : 0;
+            $from_postcode       = WC()->countries->get_base_postcode();
+            $destination_country = isset( $package['destination']['country'] ) ? $package['destination']['country'] : WC()->countries->get_base_country();
+            $to_postcode         = isset( $package['destination']['postcode'] ) ? wc_format_postcode( $package['destination']['postcode'], $destination_country ) : '';
+            $weight              = isset( $package['contents_weight'] ) ? $package['contents_weight'] : 0;
 
-            if ( ! is_numeric( $to_postcode ) || ! is_numeric( $weight ) || $weight <= 0 ) {
+            if ( ! WC_Validation::is_postcode( $to_postcode, $destination_country ) ) {
                 if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
                     Auspost_Shipping_Logger::log(
                         array(
@@ -84,9 +85,13 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
                             'to_postcode'   => $to_postcode,
                             'weight'        => $weight,
                         ),
-                        'Missing or invalid destination postcode or weight.'
+                        'Missing or invalid destination postcode.'
                     );
                 }
+                return;
+            }
+
+            if ( ! is_numeric( $weight ) || $weight <= 0 ) {
                 return;
             }
 
