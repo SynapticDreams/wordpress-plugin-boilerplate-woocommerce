@@ -72,12 +72,13 @@ class Auspost_Shipping {
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'auspost-shipping';
+               $this->plugin_name = 'auspost-shipping';
 
-		$this->load_dependencies();
-		$this->set_locale();
-		$this->define_admin_hooks();
-		$this->define_public_hooks();
+               $this->load_dependencies();
+               $this->set_locale();
+               $this->define_admin_hooks();
+               $this->define_public_hooks();
+               $this->loader->add_filter( 'woocommerce_shipping_methods', $this, 'register_shipping_method' );
 
 	}
 
@@ -120,9 +121,10 @@ class Auspost_Shipping {
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-auspost-shipping-public.php';
+               require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-auspost-shipping-public.php';
+               require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-shipping-method.php';
 
-		$this->loader = new Auspost_Shipping_Loader();
+               $this->loader = new Auspost_Shipping_Loader();
 
 	}
 
@@ -169,14 +171,25 @@ class Auspost_Shipping {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_public_hooks() {
+        private function define_public_hooks() {
 
-		$plugin_public = new Auspost_Shipping_Public( $this->get_plugin_name(), $this->get_version() );
+                $plugin_public = new Auspost_Shipping_Public( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+                $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+                $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-	}
+        }
+
+       /**
+        * Register the AusPost shipping method with WooCommerce.
+        *
+        * @param array $methods Existing shipping methods.
+        * @return array Filtered shipping methods including AusPost.
+        */
+       public function register_shipping_method( $methods ) {
+               $methods['auspost_shipping'] = 'Auspost_Shipping_Method';
+               return $methods;
+       }
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
