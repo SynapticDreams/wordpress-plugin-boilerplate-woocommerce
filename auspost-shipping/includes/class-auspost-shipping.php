@@ -123,6 +123,7 @@ class Auspost_Shipping {
                 */
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-auspost-shipping-public.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-api.php';
+               require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mypost-api.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-shipping-method.php';
 
                $this->loader = new Auspost_Shipping_Loader();
@@ -155,15 +156,20 @@ class Auspost_Shipping {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Auspost_Shipping_Admin( $this->get_plugin_name(), $this->get_version() );
+               $plugin_admin = new Auspost_Shipping_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+               $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+               $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-        // Add plugin settings to WooCommerce
-        $this->loader->add_filter( 'woocommerce_get_settings_pages', $plugin_admin, 'ausps_add_settings' );
-        
-	}
+       // Add plugin settings to WooCommerce
+       $this->loader->add_filter( 'woocommerce_get_settings_pages', $plugin_admin, 'ausps_add_settings' );
+
+       // MyPost label creation order actions.
+       $this->loader->add_filter( 'woocommerce_order_actions', $plugin_admin, 'add_mypost_order_action' );
+       $this->loader->add_action( 'woocommerce_order_action_mypost_create_label', $plugin_admin, 'process_mypost_create_label' );
+       $this->loader->add_action( 'woocommerce_admin_order_data_after_shipping_address', $plugin_admin, 'display_mypost_meta' );
+
+       }
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality
