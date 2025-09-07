@@ -48,9 +48,6 @@ if ( ! class_exists( 'Pac_Rate_Client' ) ) {
             $rates = parent::get_rates( $shipment );
 
             if ( is_wp_error( $rates ) ) {
-                if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
-                    Auspost_Shipping_Logger::log( $shipment, $rates->get_error_message() );
-                }
                 return array();
             }
 

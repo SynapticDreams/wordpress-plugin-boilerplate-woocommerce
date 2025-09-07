@@ -170,7 +170,15 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
                         'width'         => $pkg['width'],
                         'height'        => $pkg['height'],
                     );
-                    $rates = $this->get_rate_client()->get_rates( $shipment );
+                    try {
+                        $rates = $this->get_rate_client()->get_rates( $shipment );
+                    } catch ( Exception $e ) {
+                        if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
+                            Auspost_Shipping_Logger::log( $shipment, $e->getMessage() );
+                        }
+                        wc_add_notice( __( 'We were unable to retrieve shipping rates at this time. Please try again later.', 'auspost-shipping' ), 'error' );
+                        return;
+                    }
                     foreach ( $rates as $rate ) {
                         if ( isset( $totals[ $rate['code'] ] ) ) {
                             $totals[ $rate['code'] ]['price'] += $rate['price'];
@@ -203,13 +211,26 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
 
             $weight = wc_get_weight( $weight, 'kg' );
 
-            $rates = $this->get_rate_client()->get_rates(
-                array(
+            try {
+                $rates = $this->get_rate_client()->get_rates(
+                    array(
+                        'from_postcode' => $from_postcode,
+                        'to_postcode'   => $to_postcode,
+                        'weight'        => $weight,
+                    )
+                );
+            } catch ( Exception $e ) {
+                $shipment = array(
                     'from_postcode' => $from_postcode,
                     'to_postcode'   => $to_postcode,
                     'weight'        => $weight,
-                )
-            );
+                );
+                if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
+                    Auspost_Shipping_Logger::log( $shipment, $e->getMessage() );
+                }
+                wc_add_notice( __( 'We were unable to retrieve shipping rates at this time. Please try again later.', 'auspost-shipping' ), 'error' );
+                return;
+            }
 
             if ( empty( $rates ) ) {
                 return;
@@ -248,11 +269,12 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
                 return $this->rate_client;
             }
 
-            $contract_account = get_option( 'auspost_shipping_contract_account_number' );
-            $contract_key     = get_option( 'auspost_shipping_contract_api_key' );
-            $contract_secret  = get_option( 'auspost_shipping_contract_api_secret' );
+            $account_type = get_option( 'auspost_shipping_account_type', 'mypost' );
 
-            if ( $contract_account && $contract_key && $contract_secret ) {
+            if ( 'contracted' === $account_type ) {
+                $contract_account = get_option( 'auspost_shipping_contract_account_number' );
+                $contract_key     = get_option( 'auspost_shipping_contract_api_key' );
+                $contract_secret  = get_option( 'auspost_shipping_contract_api_secret' );
                 $this->rate_client = new Contract_Rate_Client( $contract_account, $contract_key, $contract_secret );
             } else {
                 $this->rate_client = new Pac_Rate_Client();

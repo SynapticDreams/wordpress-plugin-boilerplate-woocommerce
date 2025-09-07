@@ -105,14 +105,31 @@ if ( ! class_exists( 'Auspost_API' ) ) {
                 return $cached;
             }
 
-            $response = wp_remote_get(
-                $url,
-                array(
-                    'headers' => array(
-                        'auth-key' => $this->api_key,
-                    ),
-                )
-            );
+            try {
+                $response = wp_remote_get(
+                    $url,
+                    array(
+                        'headers' => array(
+                            'auth-key' => $this->api_key,
+                        ),
+                    )
+                );
+            } catch ( Exception $e ) {
+                if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
+                    Auspost_Shipping_Logger::log( $url, $e->getMessage() );
+                }
+                return new WP_Error( 'auspost_api_http_error', $e->getMessage() );
+            }
+
+            if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
+                if ( is_wp_error( $response ) ) {
+                    Auspost_Shipping_Logger::log( $url, $response->get_error_message() );
+                } else {
+                    $code_log = wp_remote_retrieve_response_code( $response );
+                    $body_log = wp_remote_retrieve_body( $response );
+                    Auspost_Shipping_Logger::log( $url, array( 'code' => $code_log, 'body' => $body_log ) );
+                }
+            }
 
             if ( is_wp_error( $response ) ) {
                 return $response;
