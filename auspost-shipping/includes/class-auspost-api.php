@@ -31,6 +31,26 @@ if ( ! class_exists( 'Auspost_API' ) ) {
         protected $endpoint = 'https://digitalapi.auspost.com.au/postage/parcel/domestic/service.json';
 
         /**
+         * API key for authenticating requests.
+         *
+         * @var string
+         */
+        protected $api_key;
+
+        /**
+         * Constructor.
+         *
+         * @param string|null $api_key API key for the AusPost API.
+         */
+        public function __construct( $api_key = null ) {
+            if ( null === $api_key ) {
+                $api_key = get_option( 'auspost_shipping_auspost_api_key' );
+            }
+
+            $this->api_key = $api_key;
+        }
+
+        /**
          * Build a request URL for the given arguments.
          *
          * @param array $args Request arguments.
@@ -64,7 +84,14 @@ if ( ! class_exists( 'Auspost_API' ) ) {
                 return $cached;
             }
 
-            $response = wp_remote_get( $url );
+            $response = wp_remote_get(
+                $url,
+                array(
+                    'headers' => array(
+                        'auth-key' => $this->api_key,
+                    ),
+                )
+            );
 
             if ( is_wp_error( $response ) ) {
                 return $response;
