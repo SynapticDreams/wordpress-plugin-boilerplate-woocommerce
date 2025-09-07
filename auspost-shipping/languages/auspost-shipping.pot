@@ -1,0 +1,240 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-07 13:38+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: auspost-shipping/includes/class-mypost-api.php:94
+msgid "Unable to decode response from MyPost API."
+msgstr ""
+
+#: auspost-shipping/includes/class-mypost-api.php:98
+msgid "Unexpected response from MyPost API."
+msgstr ""
+
+#: auspost-shipping/includes/class-mypost-api.php:102
+msgid "Invalid response from MyPost API."
+msgstr ""
+
+#: auspost-shipping/includes/class-auspost-api.php:75
+msgid "Unexpected response from AusPost API."
+msgstr ""
+
+#: auspost-shipping/includes/class-auspost-api.php:98
+msgid "Invalid response from AusPost API."
+msgstr ""
+
+#: auspost-shipping/includes/class-auspost-shipping-method.php:30
+msgid "AusPost"
+msgstr ""
+
+#: auspost-shipping/includes/class-auspost-shipping-method.php:31
+msgid "Calculate shipping rates using AusPost."
+msgstr ""
+
+#: auspost-shipping/includes/class-auspost-shipping-method.php:38
+#: auspost-shipping/includes/class-auspost-shipping-method.php:59
+msgid "AusPost Shipping"
+msgstr ""
+
+#: auspost-shipping/includes/class-auspost-shipping-method.php:50
+msgid "Enable"
+msgstr ""
+
+#: auspost-shipping/includes/class-auspost-shipping-method.php:52
+msgid "Enable AusPost shipping"
+msgstr ""
+
+#: auspost-shipping/includes/class-auspost-shipping-method.php:56
+msgid "Method Title"
+msgstr ""
+
+#: auspost-shipping/includes/class-auspost-shipping-method.php:58
+msgid "Title to be shown during checkout."
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:4
+msgid "Light Speed"
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:5
+msgid "Faster Than Light"
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:10
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:27
+msgid "General Configuration"
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:16
+msgid "Battlestar Group"
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:18
+msgid " The numeric designation of this Battlestar Group."
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:22
+msgid "Flagship"
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:24
+msgid " The name of this Battlestar Group flagship. "
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:34
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:60
+msgid "Flagship Settings"
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:40
+msgid "Propulsion Type"
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:44
+msgid " The primary propulsion type utilized by this flagship."
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:48
+msgid "Length"
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:50
+msgid " The length in meters of this ship."
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:54
+msgid "In Service?"
+msgstr ""
+
+#: auspost-shipping/admin/partials/auspost-shipping-settings-main.php:56
+msgid "Uncheck this box if the ship is out of service."
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-admin.php:122
+msgid "Create MyPost Label"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-admin.php:144
+#, php-format
+msgid "MyPost label error: %s"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-admin.php:152
+msgid "MyPost label created successfully."
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-admin.php:165
+msgid "Download MyPost Label"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-admin.php:169
+#, php-format
+msgid "MyPost Tracking: %s"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-admin.php:180
+msgid "Create MyPost Labels"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-admin.php:224
+#, php-format
+msgid "%s label created."
+msgid_plural "%s labels created."
+msgstr[0] ""
+msgstr[1] ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:31
+msgid "Auspost Shipping"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:49
+msgid "Settings"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:50
+msgid "Log"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:51
+msgid "Sale Results"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:80
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:103
+msgid "API Credentials"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:86
+msgid "AusPost API Key"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:88
+msgid "Key for accessing the AusPost API."
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:92
+msgid "MyPost Business API Key"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:94
+msgid "Key for accessing the MyPost Business API."
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:98
+msgid "MyPost Business API Secret"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:100
+msgid "Secret for accessing the MyPost Business API."
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:124
+msgid "Log cleared."
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:127
+msgid "API Request Log"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:129
+msgid "Time"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:129
+msgid "Request"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:129
+msgid "Response"
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:135
+msgid "No log entries found."
+msgstr ""
+
+#: auspost-shipping/admin/class-auspost-shipping-wc-settings.php:138
+msgid "Clear Log"
+msgstr ""
+
+#: auspost-shipping/auspost-shipping.php:49
+msgid "Auspost Shipping requires WooCommerce to be installed and active."
+msgstr ""
+
+#: auspost-shipping/public/js/auspost-shipping-public.js:5
+msgid "AusPost public JS loaded"
+msgstr ""

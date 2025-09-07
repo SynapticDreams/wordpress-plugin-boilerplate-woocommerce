@@ -1,6 +1,10 @@
 (function( $ ) {
 	'use strict';
 
+	if ( window.wp && wp.i18n ) {
+		wp.i18n.__('AusPost public JS loaded', 'auspost-shipping');
+	}
+
 	/**
 	 * All of the code for your public-facing JavaScript source
 	 * should reside in this file.
