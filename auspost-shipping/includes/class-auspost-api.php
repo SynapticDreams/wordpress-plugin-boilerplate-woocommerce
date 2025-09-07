@@ -54,14 +54,31 @@ if ( ! class_exists( 'Auspost_API' ) ) {
          * Build a request URL for the given arguments.
          *
          * @param array $args Request arguments.
-         * @return string
+         * @return string|WP_Error Request URL or WP_Error when required args are missing.
          */
         public function build_request_url( $args ) {
-            $query = http_build_query( array(
-                'from_postcode' => $args['from_postcode'],
-                'to_postcode'   => $args['to_postcode'],
-                'weight'        => $args['weight'],
-            ), '', '&', PHP_QUERY_RFC3986 );
+            if ( ! isset( $args['from_postcode'] ) ) {
+                return new WP_Error( 'auspost_api_missing_from_postcode', __( 'Missing required from_postcode.', 'auspost-shipping' ) );
+            }
+
+            if ( ! isset( $args['to_postcode'] ) ) {
+                return new WP_Error( 'auspost_api_missing_to_postcode', __( 'Missing required to_postcode.', 'auspost-shipping' ) );
+            }
+
+            if ( ! isset( $args['weight'] ) ) {
+                return new WP_Error( 'auspost_api_missing_weight', __( 'Missing required weight.', 'auspost-shipping' ) );
+            }
+
+            $query = http_build_query(
+                array(
+                    'from_postcode' => $args['from_postcode'],
+                    'to_postcode'   => $args['to_postcode'],
+                    'weight'        => $args['weight'],
+                ),
+                '',
+                '&',
+                PHP_QUERY_RFC3986
+            );
 
             return $this->endpoint . '?' . $query;
         }
@@ -76,7 +93,11 @@ if ( ! class_exists( 'Auspost_API' ) ) {
          * @return array|WP_Error Array of rate data or WP_Error on failure.
          */
         public function get_rates( $args ) {
-            $url       = $this->build_request_url( $args );
+            $url = $this->build_request_url( $args );
+            if ( is_wp_error( $url ) ) {
+                return $url;
+            }
+
             $cache_key = 'auspost_rate_' . md5( $url );
 
             $cached = get_transient( $cache_key );
