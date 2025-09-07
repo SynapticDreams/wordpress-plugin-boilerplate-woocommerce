@@ -71,10 +71,10 @@ if ( ! class_exists( 'Auspost_Shipping_WC_Settings' ) ) {
                     $settings = array();
                     break;
                 default:
-                    include 'partials/auspost-shipping-settings-main.php';
+                    $main_settings = require 'partials/auspost-shipping-settings-main.php';
 
                     $settings = array_merge(
-                        $settings,
+                        $main_settings,
                         array(
                             array(
                                 'name' => __( 'API Credentials', 'auspost-shipping' ),
