@@ -212,11 +212,15 @@ class Auspost_Shipping_Admin {
      * Display admin notice after bulk action completes.
      */
     public function bulk_action_admin_notice() {
-        if ( empty( $_REQUEST['mypost_labels_created'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( ! isset( $_REQUEST['mypost_labels_created'], $_REQUEST['_wpnonce'] ) ) {
             return;
         }
 
-        $count = (int) $_REQUEST['mypost_labels_created']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-posts' ) ) {
+            return;
+        }
+
+        $count = absint( wp_unslash( $_REQUEST['mypost_labels_created'] ) );
         printf( '<div class="updated notice"><p>%s</p></div>', esc_html( sprintf( _n( '%s label created.', '%s labels created.', $count, 'auspost-shipping' ), $count ) ) );
     }
 
