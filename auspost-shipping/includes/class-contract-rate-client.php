@@ -114,7 +114,14 @@ if ( ! class_exists( 'Contract_Rate_Client' ) ) {
                 'timeout' => 15,
             );
 
-            $response = wp_remote_post( $this->endpoint, $args );
+            try {
+                $response = wp_remote_post( $this->endpoint, $args );
+            } catch ( Exception $e ) {
+                if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
+                    Auspost_Shipping_Logger::log( $payload, $e->getMessage() );
+                }
+                return array();
+            }
 
             if ( is_wp_error( $response ) ) {
                 if ( class_exists( 'Auspost_Shipping_Logger' ) ) {

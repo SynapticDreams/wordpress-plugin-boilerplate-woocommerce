@@ -82,6 +82,17 @@ if ( ! class_exists( 'Auspost_Shipping_WC_Settings' ) ) {
                                 'id'   => $prefix . 'api_credentials',
                             ),
                             array(
+                                'id'       => $prefix . 'account_type',
+                                'name'     => __( 'Account Type', 'auspost-shipping' ),
+                                'type'     => 'select',
+                                'options'  => array(
+                                    'mypost'     => __( 'MyPost Business', 'auspost-shipping' ),
+                                    'contracted' => __( 'Contracted', 'auspost-shipping' ),
+                                ),
+                                'default'  => 'mypost',
+                                'desc_tip' => __( 'Select which AusPost account type to use.', 'auspost-shipping' ),
+                            ),
+                            array(
                                 'id'       => $prefix . 'auspost_api_key',
                                 'name'     => __( 'AusPost API Key', 'auspost-shipping' ),
                                 'type'     => 'text',
@@ -174,10 +185,36 @@ if ( ! class_exists( 'Auspost_Shipping_WC_Settings' ) ) {
          *
          * @since 1.0
          */
-        public function save() {                    
+        public function save() {
             $settings = $this->get_settings();
 
             WC_Admin_Settings::save_fields( $settings );
+
+            $prefix       = 'auspost_shipping_';
+            $account_type = get_option( $prefix . 'account_type', 'mypost' );
+
+            if ( 'contracted' === $account_type ) {
+                $required = array(
+                    $prefix . 'contract_account_number' => __( 'Contract Account Number', 'auspost-shipping' ),
+                    $prefix . 'contract_api_key'        => __( 'Contract API Key', 'auspost-shipping' ),
+                    $prefix . 'contract_api_secret'     => __( 'Contract API Secret', 'auspost-shipping' ),
+                );
+                foreach ( $required as $key => $label ) {
+                    if ( '' === get_option( $key ) ) {
+                        WC_Admin_Settings::add_error( sprintf( __( '%s is required for contracted accounts.', 'auspost-shipping' ), $label ) );
+                    }
+                }
+            } else {
+                $required = array(
+                    $prefix . 'mypost_business_api_key'    => __( 'MyPost Business API Key', 'auspost-shipping' ),
+                    $prefix . 'mypost_business_api_secret' => __( 'MyPost Business API Secret', 'auspost-shipping' ),
+                );
+                foreach ( $required as $key => $label ) {
+                    if ( '' === get_option( $key ) ) {
+                        WC_Admin_Settings::add_error( sprintf( __( '%s is required for MyPost Business accounts.', 'auspost-shipping' ), $label ) );
+                    }
+                }
+            }
         }
 
     }
