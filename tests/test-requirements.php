@@ -19,11 +19,6 @@ class RequirementsTest extends TestCase
                 return __DIR__ . '/stubs/';
             }
         }
-
-        \WP_Mock::userFunction('is_plugin_active', [
-            'return' => true,
-        ]);
-
         \WP_Mock::userFunction('register_activation_hook');
         \WP_Mock::userFunction('register_deactivation_hook');
 
@@ -37,25 +32,19 @@ class RequirementsTest extends TestCase
         \WP_Mock::tearDown();
     }
 
-    public function test_returns_true_when_woocommerce_active()
-    {
-        \WP_Mock::userFunction('is_plugin_active', [
-            'return' => true,
-            'args' => ['woocommerce/woocommerce.php'],
-        ]);
-
-        $this->assertTrue(ausps_check_requirements());
-    }
-
     public function test_returns_false_and_hooks_notice_when_woocommerce_inactive()
     {
-        \WP_Mock::userFunction('is_plugin_active', [
-            'return' => false,
-            'args' => ['woocommerce/woocommerce.php'],
-        ]);
-
         \WP_Mock::expectActionAdded('admin_notices', 'ausps_missing_wc_notice');
 
         $this->assertFalse(ausps_check_requirements());
+    }
+
+    public function test_returns_true_when_woocommerce_active()
+    {
+        if (!class_exists('WooCommerce')) {
+            class WooCommerce {}
+        }
+
+        $this->assertTrue(ausps_check_requirements());
     }
 }
