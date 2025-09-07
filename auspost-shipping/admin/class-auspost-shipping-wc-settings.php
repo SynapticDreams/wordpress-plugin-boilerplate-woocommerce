@@ -73,8 +73,42 @@ if ( ! class_exists( 'Auspost_Shipping_WC_Settings' ) ) {
                     );
                     break;
                 default:
-                    include 'partials/auspost-shipping-settings-main.php';      
-            }   
+                    include 'partials/auspost-shipping-settings-main.php';
+
+                    $settings = array_merge(
+                        $settings,
+                        array(
+                            array(
+                                'name' => __( 'API Credentials', 'auspost-shipping' ),
+                                'type' => 'title',
+                                'id'   => $prefix . 'api_credentials',
+                            ),
+                            array(
+                                'id'       => $prefix . 'auspost_api_key',
+                                'name'     => __( 'AusPost API Key', 'auspost-shipping' ),
+                                'type'     => 'text',
+                                'desc_tip' => __( 'Key for accessing the AusPost API.', 'auspost-shipping' ),
+                            ),
+                            array(
+                                'id'       => $prefix . 'mypost_business_api_key',
+                                'name'     => __( 'MyPost Business API Key', 'auspost-shipping' ),
+                                'type'     => 'text',
+                                'desc_tip' => __( 'Key for accessing the MyPost Business API.', 'auspost-shipping' ),
+                            ),
+                            array(
+                                'id'       => $prefix . 'mypost_business_api_secret',
+                                'name'     => __( 'MyPost Business API Secret', 'auspost-shipping' ),
+                                'type'     => 'password',
+                                'desc_tip' => __( 'Secret for accessing the MyPost Business API.', 'auspost-shipping' ),
+                            ),
+                            array(
+                                'name' => __( 'API Credentials', 'auspost-shipping' ),
+                                'type' => 'sectionend',
+                                'id'   => $prefix . 'api_credentials',
+                            ),
+                        )
+                    );
+            }
 
             return apply_filters( 'woocommerce_get_settings_' . $this->id, $settings, $current_section );                   
         }
