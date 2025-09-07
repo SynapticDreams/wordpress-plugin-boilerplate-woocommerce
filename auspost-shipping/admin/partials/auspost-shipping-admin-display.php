@@ -8,8 +8,8 @@
  * @link       https://paulmiller3000.com
  * @since      1.0.0
  *
- * @package    P3k_Galactica
- * @subpackage P3k_Galactica/admin/partials
+ * @package    Auspost_Shipping
+ * @subpackage Auspost_Shipping/admin/partials
  */
 ?>
 

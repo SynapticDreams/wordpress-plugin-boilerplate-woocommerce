@@ -6,8 +6,8 @@
  * @link       https://paulmiller3000.com
  * @since      1.0.0
  *
- * @package    P3k_Galactica
- * @subpackage P3k_Galactica/includes
+ * @package    Auspost_Shipping
+ * @subpackage Auspost_Shipping/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    P3k_Galactica
- * @subpackage P3k_Galactica/includes
+ * @package    Auspost_Shipping
+ * @subpackage Auspost_Shipping/includes
  * @author     Paul Miller <hello@paulmiller3000.com>
  */
-class P3k_Galactica_Loader {
+class Auspost_Shipping_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

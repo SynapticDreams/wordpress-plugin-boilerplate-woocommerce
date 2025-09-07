@@ -22,7 +22,7 @@
  * @link       https://paulmiller3000.com
  * @since      1.0.0
  *
- * @package    P3k_Galactica
+ * @package    Auspost_Shipping
  */
 
 // If uninstall not called from WordPress, then exit.

@@ -9,8 +9,8 @@
  * @link       https://paulmiller3000.com
  * @since      1.0.0
  *
- * @package    P3k_Galactica
- * @subpackage P3k_Galactica/includes
+ * @package    Auspost_Shipping
+ * @subpackage Auspost_Shipping/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    P3k_Galactica
- * @subpackage P3k_Galactica/includes
+ * @package    Auspost_Shipping
+ * @subpackage Auspost_Shipping/includes
  * @author     Paul Miller <hello@paulmiller3000.com>
  */
-class P3k_Galactica_i18n {
+class Auspost_Shipping_i18n {
 
 
 	/**
@@ -35,7 +35,7 @@ class P3k_Galactica_i18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'p3k-galactica',
+			'auspost-shipping',
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);
