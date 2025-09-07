@@ -74,8 +74,10 @@ if ( ! class_exists( 'MyPost_API' ) ) {
          */
         public function create_label( $data ) {
             $args = array(
-                'headers' => $this->get_headers(),
-                'body'    => wp_json_encode( $data ),
+                'headers'     => $this->get_headers(),
+                'body'        => wp_json_encode( $data ),
+                'timeout'     => 15,
+                'redirection' => 5,
             );
 
             $response = wp_remote_post( $this->endpoint, $args );
@@ -85,17 +87,18 @@ if ( ! class_exists( 'MyPost_API' ) ) {
                 return $response;
             }
 
-            $code  = wp_remote_retrieve_response_code( $response );
-            $body  = json_decode( wp_remote_retrieve_body( $response ), true );
-            $error = json_last_error();
+            $code      = wp_remote_retrieve_response_code( $response );
+            $body_raw  = wp_remote_retrieve_body( $response );
+            $body      = json_decode( $body_raw, true );
+            $error     = json_last_error();
             Auspost_Shipping_Logger::log( $data, array( 'code' => $code, 'body' => $body ) );
 
             if ( JSON_ERROR_NONE !== $error ) {
-                return new WP_Error( 'mypost_api_json_error', __( 'Unable to decode response from MyPost API.', 'auspost-shipping' ) );
+                return new WP_Error( 'mypost_api_json_error', __( 'Unable to decode response from MyPost API.', 'auspost-shipping' ), $body_raw );
             }
 
             if ( 201 !== $code && 200 !== $code ) {
-                return new WP_Error( 'mypost_api_error', __( 'Unexpected response from MyPost API.', 'auspost-shipping' ) );
+                return new WP_Error( 'mypost_api_error', __( 'Unexpected response from MyPost API.', 'auspost-shipping' ), $body_raw );
             }
 
             if ( empty( $body['labelUrl'] ) || empty( $body['trackingNumber'] ) ) {
