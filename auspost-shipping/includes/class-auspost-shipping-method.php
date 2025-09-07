@@ -23,6 +23,13 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
     class Auspost_Shipping_Method extends WC_Shipping_Method {
 
         /**
+         * Rate client instance.
+         *
+         * @var Rate_Client_Interface|null
+         */
+        protected $rate_client = null;
+
+        /**
          * Constructor.
          */
         public function __construct() {
@@ -97,8 +104,7 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
 
             $weight = wc_get_weight( $weight, 'kg' );
 
-            $api   = new Auspost_API();
-            $rates = $api->get_rates(
+            $rates = $this->get_rate_client()->get_rates(
                 array(
                     'from_postcode' => $from_postcode,
                     'to_postcode'   => $to_postcode,
@@ -106,7 +112,7 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
                 )
             );
 
-            if ( is_wp_error( $rates ) || empty( $rates ) ) {
+            if ( empty( $rates ) ) {
                 return;
             }
 
@@ -120,6 +126,40 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
                     )
                 );
             }
+        }
+
+        /**
+         * Set a custom rate client instance.
+         *
+         * Primarily used for unit testing to inject a mock client.
+         *
+         * @param Rate_Client_Interface $client Rate client instance.
+         */
+        public function set_rate_client( Rate_Client_Interface $client ) {
+            $this->rate_client = $client;
+        }
+
+        /**
+         * Retrieve the rate client based on plugin settings.
+         *
+         * @return Rate_Client_Interface
+         */
+        protected function get_rate_client() {
+            if ( $this->rate_client ) {
+                return $this->rate_client;
+            }
+
+            $contract_key    = get_option( 'auspost_shipping_mypost_business_api_key' );
+            $contract_secret = get_option( 'auspost_shipping_mypost_business_api_secret' );
+
+            if ( $contract_key && $contract_secret ) {
+                $this->rate_client = new Contract_Rate_Client( $contract_key, $contract_secret );
+            } else {
+                $api_key           = get_option( 'auspost_shipping_auspost_api_key' );
+                $this->rate_client = new Pac_Rate_Client( $api_key );
+            }
+
+            return $this->rate_client;
         }
     }
 }

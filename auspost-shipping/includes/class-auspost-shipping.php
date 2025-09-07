@@ -122,7 +122,10 @@ class Auspost_Shipping {
                 * side of the site.
                 */
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-auspost-shipping-public.php';
+               require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-rate-client-interface.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-api.php';
+               require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pac-rate-client.php';
+               require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-contract-rate-client.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mypost-api.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-shipping-logger.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-shipping-method.php';
