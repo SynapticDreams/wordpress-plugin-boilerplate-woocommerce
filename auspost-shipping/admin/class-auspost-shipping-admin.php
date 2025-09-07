@@ -107,9 +107,67 @@ class Auspost_Shipping_Admin {
     * @access   private
     */
     public function ausps_add_settings( $settings ) {
-        $settings[] = include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-auspost-shipping-wc-settings.php';        
+        $settings[] = include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-auspost-shipping-wc-settings.php';
 
         return $settings;
+    }
+
+    /**
+     * Add MyPost label creation to order actions dropdown.
+     *
+     * @param array $actions Existing actions.
+     * @return array
+     */
+    public function add_mypost_order_action( $actions ) {
+        $actions['mypost_create_label'] = __( 'Create MyPost Label', 'auspost-shipping' );
+        return $actions;
+    }
+
+    /**
+     * Handle MyPost label creation for an order.
+     *
+     * @param WC_Order $order Order object.
+     */
+    public function process_mypost_create_label( $order ) {
+        $api_key    = get_option( 'auspost_shipping_mypost_business_api_key' );
+        $api_secret = get_option( 'auspost_shipping_mypost_business_api_secret' );
+
+        $api = new MyPost_API( $api_key, $api_secret );
+
+        $payload = array(
+            'order_id' => $order->get_id(),
+        );
+
+        $result = $api->create_label( $payload );
+
+        if ( is_wp_error( $result ) ) {
+            $order->add_order_note( sprintf( __( 'MyPost label error: %s', 'auspost-shipping' ), $result->get_error_message() ) );
+            return;
+        }
+
+        $order->update_meta_data( '_mypost_label_url', $result['label_url'] );
+        $order->update_meta_data( '_mypost_tracking_number', $result['tracking_number'] );
+        $order->save();
+
+        $order->add_order_note( __( 'MyPost label created successfully.', 'auspost-shipping' ) );
+    }
+
+    /**
+     * Display MyPost label download link and tracking in order meta.
+     *
+     * @param WC_Order $order Order object.
+     */
+    public function display_mypost_meta( $order ) {
+        $label_url       = $order->get_meta( '_mypost_label_url' );
+        $tracking_number = $order->get_meta( '_mypost_tracking_number' );
+
+        if ( $label_url ) {
+            echo '<p><a href="' . esc_url( $label_url ) . '" target="_blank">' . esc_html__( 'Download MyPost Label', 'auspost-shipping' ) . '</a></p>';
+        }
+
+        if ( $tracking_number ) {
+            echo '<p>' . sprintf( esc_html__( 'MyPost Tracking: %s', 'auspost-shipping' ), esc_html( $tracking_number ) ) . '</p>';
+        }
     }
 
 }
