@@ -72,29 +72,48 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
          * @param array $package Shipping package data.
          */
         public function calculate_shipping( $package = array() ) {
-            $api = new Auspost_API();
-
             $from_postcode = WC()->countries->get_base_postcode();
             $to_postcode   = isset( $package['destination']['postcode'] ) ? $package['destination']['postcode'] : '';
-            $weight        = isset( $package['contents_weight'] ) ? wc_get_weight( $package['contents_weight'], 'kg' ) : 0;
+            $weight        = isset( $package['contents_weight'] ) ? $package['contents_weight'] : 0;
 
-            $rates = $api->get_rates( array(
-                'from_postcode' => $from_postcode,
-                'to_postcode'   => $to_postcode,
-                'weight'        => $weight,
-            ) );
+            if ( ! is_numeric( $to_postcode ) || ! is_numeric( $weight ) || $weight <= 0 ) {
+                if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
+                    Auspost_Shipping_Logger::log(
+                        array(
+                            'from_postcode' => $from_postcode,
+                            'to_postcode'   => $to_postcode,
+                            'weight'        => $weight,
+                        ),
+                        'Missing or invalid destination postcode or weight.'
+                    );
+                }
+                return;
+            }
+
+            $weight = wc_get_weight( $weight, 'kg' );
+
+            $api   = new Auspost_API();
+            $rates = $api->get_rates(
+                array(
+                    'from_postcode' => $from_postcode,
+                    'to_postcode'   => $to_postcode,
+                    'weight'        => $weight,
+                )
+            );
 
             if ( is_wp_error( $rates ) || empty( $rates ) ) {
                 return;
             }
 
             foreach ( $rates as $rate ) {
-                $this->add_rate( array(
-                    'id'    => $this->id . ':' . $rate['code'],
-                    'label' => $rate['name'],
-                    'cost'  => $rate['price'],
-                    'package' => $package,
-                ) );
+                $this->add_rate(
+                    array(
+                        'id'      => $this->id . ':' . $rate['code'],
+                        'label'   => $rate['name'],
+                        'cost'    => $rate['price'],
+                        'package' => $package,
+                    )
+                );
             }
         }
     }
