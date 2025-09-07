@@ -170,4 +170,54 @@ class Auspost_Shipping_Admin {
         }
     }
 
+    /**
+     * Register bulk action for creating MyPost labels.
+     *
+     * @param array $bulk_actions Existing bulk actions.
+     * @return array
+     */
+    public function register_bulk_actions( $bulk_actions ) {
+        $bulk_actions['mypost_create_labels'] = __( 'Create MyPost Labels', 'auspost-shipping' );
+        return $bulk_actions;
+    }
+
+    /**
+     * Handle bulk action for label creation.
+     *
+     * @param string $redirect_to Redirect URL.
+     * @param string $action      Current action.
+     * @param array  $order_ids   Order IDs.
+     * @return string
+     */
+    public function handle_bulk_actions( $redirect_to, $action, $order_ids ) {
+        if ( 'mypost_create_labels' !== $action ) {
+            return $redirect_to;
+        }
+
+        $processed = 0;
+        foreach ( $order_ids as $order_id ) {
+            $order = wc_get_order( $order_id );
+            if ( ! $order ) {
+                continue;
+            }
+            $this->process_mypost_create_label( $order );
+            $processed++;
+        }
+
+        $redirect_to = add_query_arg( 'mypost_labels_created', $processed, $redirect_to );
+        return $redirect_to;
+    }
+
+    /**
+     * Display admin notice after bulk action completes.
+     */
+    public function bulk_action_admin_notice() {
+        if ( empty( $_REQUEST['mypost_labels_created'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            return;
+        }
+
+        $count = (int) $_REQUEST['mypost_labels_created']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        printf( '<div class="updated notice"><p>%s</p></div>', esc_html( sprintf( _n( '%s label created.', '%s labels created.', $count, 'auspost-shipping' ), $count ) ) );
+    }
+
 }

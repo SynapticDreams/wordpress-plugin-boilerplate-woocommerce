@@ -68,9 +68,7 @@ if ( ! class_exists( 'Auspost_Shipping_WC_Settings' ) ) {
             
             switch ($current_section) {
                 case 'log':
-                    $settings = array(                              
-                            array()
-                    );
+                    $settings = array();
                     break;
                 default:
                     include 'partials/auspost-shipping-settings-main.php';
@@ -120,13 +118,32 @@ if ( ! class_exists( 'Auspost_Shipping_WC_Settings' ) ) {
             global $current_section;
 
             switch ($current_section) {
+                case 'log':
+                    if ( isset( $_GET['auspost_shipping_clear_log'] ) && check_admin_referer( 'auspost_shipping_clear_log' ) ) {
+                        Auspost_Shipping_Logger::clear();
+                        echo '<div class="updated"><p>' . esc_html__( 'Log cleared.', 'auspost-shipping' ) . '</p></div>';
+                    }
+                    $logs = Auspost_Shipping_Logger::get_logs();
+                    echo '<h2>' . esc_html__( 'API Request Log', 'auspost-shipping' ) . '</h2>';
+                    if ( $logs ) {
+                        echo '<table class="widefat"><thead><tr><th>' . esc_html__( 'Time', 'auspost-shipping' ) . '</th><th>' . esc_html__( 'Request', 'auspost-shipping' ) . '</th><th>' . esc_html__( 'Response', 'auspost-shipping' ) . '</th></tr></thead><tbody>';
+                        foreach ( array_reverse( $logs ) as $log ) {
+                            echo '<tr><td>' . esc_html( $log['time'] ) . '</td><td><pre>' . esc_html( print_r( $log['request'], true ) ) . '</pre></td><td><pre>' . esc_html( print_r( $log['response'], true ) ) . '</pre></td></tr>';
+                        }
+                        echo '</tbody></table>';
+                    } else {
+                        echo '<p>' . esc_html__( 'No log entries found.', 'auspost-shipping' ) . '</p>';
+                    }
+                    $clear_url = wp_nonce_url( add_query_arg( array( 'auspost_shipping_clear_log' => 1 ) ), 'auspost_shipping_clear_log' );
+                    echo '<p><a class="button" href="' . esc_url( $clear_url ) . '">' . esc_html__( 'Clear Log', 'auspost-shipping' ) . '</a></p>';
+                    break;
                 case 'results':
                     include 'partials/auspost-shipping-settings-results.php';
                     break;
                 default:
                     $settings = $this->get_settings();
                     WC_Admin_Settings::output_fields( $settings );
-            }               
+            }
             
         }
 
