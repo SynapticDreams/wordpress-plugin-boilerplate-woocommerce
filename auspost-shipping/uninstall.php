@@ -32,6 +32,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 $option_names = array(
     'auspost_shipping_auspost_api_key',
+    'auspost_shipping_pac_api_key',
     'auspost_shipping_mypost_business_api_key',
     'auspost_shipping_mypost_business_api_secret',
     'auspost_shipping_log',
