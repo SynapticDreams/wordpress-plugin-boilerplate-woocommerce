@@ -85,9 +85,14 @@ if ( ! class_exists( 'MyPost_API' ) ) {
                 return $response;
             }
 
-            $code = wp_remote_retrieve_response_code( $response );
-            $body = json_decode( wp_remote_retrieve_body( $response ), true );
+            $code  = wp_remote_retrieve_response_code( $response );
+            $body  = json_decode( wp_remote_retrieve_body( $response ), true );
+            $error = json_last_error();
             Auspost_Shipping_Logger::log( $data, array( 'code' => $code, 'body' => $body ) );
+
+            if ( JSON_ERROR_NONE !== $error ) {
+                return new WP_Error( 'mypost_api_json_error', __( 'Unable to decode response from MyPost API.', 'auspost-shipping' ) );
+            }
 
             if ( 201 !== $code && 200 !== $code ) {
                 return new WP_Error( 'mypost_api_error', __( 'Unexpected response from MyPost API.', 'auspost-shipping' ) );
