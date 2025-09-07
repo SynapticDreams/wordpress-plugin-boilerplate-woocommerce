@@ -35,6 +35,9 @@ $option_names = array(
     'auspost_shipping_pac_api_key',
     'auspost_shipping_mypost_business_api_key',
     'auspost_shipping_mypost_business_api_secret',
+    'auspost_shipping_contract_account_number',
+    'auspost_shipping_contract_api_key',
+    'auspost_shipping_contract_api_secret',
     'auspost_shipping_log',
     'woocommerce_auspost_shipping_settings',
 );

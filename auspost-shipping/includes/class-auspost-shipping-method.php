@@ -179,11 +179,12 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
                 return $this->rate_client;
             }
 
-            $contract_key    = get_option( 'auspost_shipping_mypost_business_api_key' );
-            $contract_secret = get_option( 'auspost_shipping_mypost_business_api_secret' );
+            $contract_account = get_option( 'auspost_shipping_contract_account_number' );
+            $contract_key     = get_option( 'auspost_shipping_contract_api_key' );
+            $contract_secret  = get_option( 'auspost_shipping_contract_api_secret' );
 
-            if ( $contract_key && $contract_secret ) {
-                $this->rate_client = new Contract_Rate_Client( $contract_key, $contract_secret );
+            if ( $contract_account && $contract_key && $contract_secret ) {
+                $this->rate_client = new Contract_Rate_Client( $contract_account, $contract_key, $contract_secret );
             } else {
                 $this->rate_client = new Pac_Rate_Client();
             }
