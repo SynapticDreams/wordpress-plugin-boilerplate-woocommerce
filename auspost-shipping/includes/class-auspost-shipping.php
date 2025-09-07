@@ -124,6 +124,7 @@ class Auspost_Shipping {
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-auspost-shipping-public.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-api.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mypost-api.php';
+               require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-shipping-logger.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-shipping-method.php';
 
                $this->loader = new Auspost_Shipping_Loader();
@@ -168,6 +169,11 @@ class Auspost_Shipping {
        $this->loader->add_filter( 'woocommerce_order_actions', $plugin_admin, 'add_mypost_order_action' );
        $this->loader->add_action( 'woocommerce_order_action_mypost_create_label', $plugin_admin, 'process_mypost_create_label' );
        $this->loader->add_action( 'woocommerce_admin_order_data_after_shipping_address', $plugin_admin, 'display_mypost_meta' );
+
+       // Bulk action for creating multiple labels.
+       $this->loader->add_filter( 'bulk_actions-edit-shop_order', $plugin_admin, 'register_bulk_actions' );
+       $this->loader->add_filter( 'handle_bulk_actions-edit-shop_order', $plugin_admin, 'handle_bulk_actions', 10, 3 );
+       $this->loader->add_action( 'admin_notices', $plugin_admin, 'bulk_action_admin_notice' );
 
        }
 
