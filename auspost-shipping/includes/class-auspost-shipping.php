@@ -115,7 +115,8 @@ class Auspost_Shipping {
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-auspost-shipping-admin.php';
+               require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-auspost-shipping-admin.php';
+               require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-box-settings.php';
 
                /**
                 * The class responsible for defining all actions that occur in the public-facing
@@ -129,6 +130,7 @@ class Auspost_Shipping {
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mypost-api.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-shipping-logger.php';
                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-shipping-method.php';
+               require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-box-packer.php';
 
                $this->loader = new Auspost_Shipping_Loader();
 
@@ -160,13 +162,18 @@ class Auspost_Shipping {
 	 */
 	private function define_admin_hooks() {
 
-               $plugin_admin = new Auspost_Shipping_Admin( $this->get_plugin_name(), $this->get_version() );
+              $plugin_admin = new Auspost_Shipping_Admin( $this->get_plugin_name(), $this->get_version() );
+              $box_settings = new Auspost_Box_Settings();
 
-               $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-               $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+              $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+              $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
        // Add plugin settings to WooCommerce
        $this->loader->add_filter( 'woocommerce_get_settings_pages', $plugin_admin, 'ausps_add_settings' );
+
+       // Box settings page
+       $this->loader->add_action( 'admin_menu', $box_settings, 'register_menu' );
+       $this->loader->add_action( 'admin_init', $box_settings, 'register_settings' );
 
        // MyPost label creation order actions.
        $this->loader->add_filter( 'woocommerce_order_actions', $plugin_admin, 'add_mypost_order_action' );
