@@ -50,11 +50,6 @@ if ( version_compare( PHP_VERSION, '7.0', '<' ) ) {
 
     return;
 }
-
-if (!function_exists('is_plugin_active')) {
-    include_once(ABSPATH . '/wp-admin/includes/plugin.php');
-}
-
 /**
 * Display a message advising WooCommerce is required
 */
@@ -102,16 +97,16 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-auspost-shipping.php';
  * @since    1.0.0
  */
 function ausps_check_requirements() {
-    if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
-        $plugin = new Auspost_Shipping();
-        $plugin->run();
+    if ( ! class_exists( 'WooCommerce' ) ) {
+        add_action( 'admin_notices', 'ausps_missing_wc_notice' );
 
-        return true;
+        return false;
     }
 
-    add_action( 'admin_notices', 'ausps_missing_wc_notice' );
+    $plugin = new Auspost_Shipping();
+    $plugin->run();
 
-    return false;
+    return true;
 }
 
 add_action( 'plugins_loaded', 'ausps_check_requirements' );
