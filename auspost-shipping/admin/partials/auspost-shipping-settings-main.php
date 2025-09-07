@@ -24,7 +24,6 @@ $settings = array(
             'desc_tip'  => __( ' The name of this Battlestar Group flagship. ', 'auspost-shipping')
         ),
         array(
-            'id'        => '',
             'name'      => __( 'General Configuration', 'auspost-shipping' ),
             'type'      => 'sectionend',
             'desc'      => '',
@@ -58,7 +57,6 @@ $settings = array(
             'default'   => 'yes'
         ),             
         array(
-            'id'        => '',
             'name'      => __( 'Flagship Settings', 'auspost-shipping' ),
             'type'      => 'sectionend',
             'desc'      => '',
