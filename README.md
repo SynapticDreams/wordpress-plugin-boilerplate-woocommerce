@@ -8,7 +8,7 @@ This fork adds a new tab with two sections to the WooCommerce Settings page. For
 
 * `.gitignore`. Used to exclude certain files from the repository.
 * `README.md`. The file that you’re currently reading.
-* A `p3k-galactica` directory that contains the source code - a fully executable WordPress plugin.
+* A `auspost-shipping` directory that contains the source code - a fully executable WordPress plugin.
 
 ## Credits
 

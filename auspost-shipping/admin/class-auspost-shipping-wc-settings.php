@@ -5,21 +5,21 @@
  * @link        https://paulmiller3000.com
  * @since       1.0.0
  *
- * @package     P3k_Galactica
- * @subpackage  P3k_Galactica/admin
+ * @package     Auspost_Shipping
+ * @subpackage  Auspost_Shipping/admin
  *
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! class_exists( 'P3k_Galactica_WC_Settings' ) ) {
+if ( ! class_exists( 'Auspost_Shipping_WC_Settings' ) ) {
 
     /**
      * Settings class
      *
      * @since 1.0.0
      */
-    class P3k_Galactica_WC_Settings extends WC_Settings_Page {
+    class Auspost_Shipping_WC_Settings extends WC_Settings_Page {
 
         /**
          * Constructor
@@ -27,8 +27,8 @@ if ( ! class_exists( 'P3k_Galactica_WC_Settings' ) ) {
          */
         public function __construct() {
                 
-            $this->id    = 'p3k-galactica';
-            $this->label = __( 'Galactica', 'p3k-galactica' );
+            $this->id    = 'auspost-shipping';
+            $this->label = __( 'Auspost Shipping', 'auspost-shipping' );
 
             // Define all hooks instead of inheriting from parent                    
             add_filter( 'woocommerce_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
@@ -46,9 +46,9 @@ if ( ! class_exists( 'P3k_Galactica_WC_Settings' ) ) {
          */
         public function get_sections() {
             $sections = array(
-                '' => __( 'Settings', 'p3k-galactica' ),
-                'log' => __( 'Log', 'p3k-galactica' ),
-                'results' => __( 'Sale Results', 'p3k-galactica' )
+                '' => __( 'Settings', 'auspost-shipping' ),
+                'log' => __( 'Log', 'auspost-shipping' ),
+                'results' => __( 'Sale Results', 'auspost-shipping' )
             );
 
             return apply_filters( 'woocommerce_get_sections_' . $this->id, $sections );
@@ -63,7 +63,7 @@ if ( ! class_exists( 'P3k_Galactica_WC_Settings' ) ) {
         public function get_settings() {
 
             global $current_section;
-            $prefix = 'p3k_galactica_';
+            $prefix = 'auspost_shipping_';
             $settings = array();
             
             switch ($current_section) {
@@ -73,7 +73,7 @@ if ( ! class_exists( 'P3k_Galactica_WC_Settings' ) ) {
                     );
                     break;
                 default:
-                    include 'partials/p3k-galactica-settings-main.php';      
+                    include 'partials/auspost-shipping-settings-main.php';      
             }   
 
             return apply_filters( 'woocommerce_get_settings_' . $this->id, $settings, $current_section );                   
@@ -87,7 +87,7 @@ if ( ! class_exists( 'P3k_Galactica_WC_Settings' ) ) {
 
             switch ($current_section) {
                 case 'results':
-                    include 'partials/p3k-galactica-settings-results.php';
+                    include 'partials/auspost-shipping-settings-results.php';
                     break;
                 default:
                     $settings = $this->get_settings();
@@ -112,4 +112,4 @@ if ( ! class_exists( 'P3k_Galactica_WC_Settings' ) ) {
 }
 
 
-return new P3k_Galactica_WC_Settings();
+return new Auspost_Shipping_WC_Settings();

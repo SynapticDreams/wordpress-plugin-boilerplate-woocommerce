@@ -6,8 +6,8 @@
  * @link       https://paulmiller3000.com
  * @since      1.0.0
  *
- * @package    P3k_Galactica
- * @subpackage P3k_Galactica/admin
+ * @package    Auspost_Shipping
+ * @subpackage Auspost_Shipping/admin
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    P3k_Galactica
- * @subpackage P3k_Galactica/admin
+ * @package    Auspost_Shipping
+ * @subpackage Auspost_Shipping/admin
  * @author     Paul Miller <hello@paulmiller3000.com>
  */
-class P3k_Galactica_Admin {
+class Auspost_Shipping_Admin {
 
 	/**
 	 * The ID of this plugin.
@@ -65,15 +65,15 @@ class P3k_Galactica_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in P3k_Galactica_Loader as all of the hooks are defined
+		 * defined in Auspost_Shipping_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The P3k_Galactica_Loader will then create the relationship
+		 * The Auspost_Shipping_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/p3k-galactica-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/auspost-shipping-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -88,15 +88,15 @@ class P3k_Galactica_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in P3k_Galactica_Loader as all of the hooks are defined
+		 * defined in Auspost_Shipping_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The P3k_Galactica_Loader will then create the relationship
+		 * The Auspost_Shipping_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/p3k-galactica-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/auspost-shipping-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
 
@@ -106,8 +106,8 @@ class P3k_Galactica_Admin {
     * @since    1.0.0
     * @access   private
     */
-    public function p3kg_add_settings( $settings ) {
-        $settings[] = include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-p3k-galactica-wc-settings.php';        
+    public function ausps_add_settings( $settings ) {
+        $settings[] = include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-auspost-shipping-wc-settings.php';        
 
         return $settings;
     }

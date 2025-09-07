@@ -9,8 +9,8 @@
  * @link       https://paulmiller3000.com
  * @since      1.0.0
  *
- * @package    P3k_Galactica
- * @subpackage P3k_Galactica/includes
+ * @package    Auspost_Shipping
+ * @subpackage Auspost_Shipping/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    P3k_Galactica
- * @subpackage P3k_Galactica/includes
+ * @package    Auspost_Shipping
+ * @subpackage Auspost_Shipping/includes
  * @author     Paul Miller <hello@paulmiller3000.com>
  */
-class P3k_Galactica {
+class Auspost_Shipping {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +35,7 @@ class P3k_Galactica {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      P3k_Galactica_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Auspost_Shipping_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -67,12 +67,12 @@ class P3k_Galactica {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'P3K_GALACTICA_VERSION' ) ) {
-			$this->version = P3K_GALACTICA_VERSION;
+		if ( defined( 'AUSPOST_SHIPPING_VERSION' ) ) {
+			$this->version = AUSPOST_SHIPPING_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'p3k-galactica';
+		$this->plugin_name = 'auspost-shipping';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -86,10 +86,10 @@ class P3k_Galactica {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - P3k_Galactica_Loader. Orchestrates the hooks of the plugin.
-	 * - P3k_Galactica_i18n. Defines internationalization functionality.
-	 * - P3k_Galactica_Admin. Defines all hooks for the admin area.
-	 * - P3k_Galactica_Public. Defines all hooks for the public side of the site.
+	 * - Auspost_Shipping_Loader. Orchestrates the hooks of the plugin.
+	 * - Auspost_Shipping_i18n. Defines internationalization functionality.
+	 * - Auspost_Shipping_Admin. Defines all hooks for the admin area.
+	 * - Auspost_Shipping_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -103,33 +103,33 @@ class P3k_Galactica {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-p3k-galactica-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-shipping-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-p3k-galactica-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auspost-shipping-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-p3k-galactica-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-auspost-shipping-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-p3k-galactica-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-auspost-shipping-public.php';
 
-		$this->loader = new P3k_Galactica_Loader();
+		$this->loader = new Auspost_Shipping_Loader();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the P3k_Galactica_i18n class in order to set the domain and to register the hook
+	 * Uses the Auspost_Shipping_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -137,7 +137,7 @@ class P3k_Galactica {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new P3k_Galactica_i18n();
+		$plugin_i18n = new Auspost_Shipping_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -152,13 +152,13 @@ class P3k_Galactica {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new P3k_Galactica_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Auspost_Shipping_Admin( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
         // Add plugin settings to WooCommerce
-        $this->loader->add_filter( 'woocommerce_get_settings_pages', $plugin_admin, 'p3kg_add_settings' );
+        $this->loader->add_filter( 'woocommerce_get_settings_pages', $plugin_admin, 'ausps_add_settings' );
         
 	}
 
@@ -171,7 +171,7 @@ class P3k_Galactica {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new P3k_Galactica_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Auspost_Shipping_Public( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -202,7 +202,7 @@ class P3k_Galactica {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    P3k_Galactica_Loader    Orchestrates the hooks of the plugin.
+	 * @return    Auspost_Shipping_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;
