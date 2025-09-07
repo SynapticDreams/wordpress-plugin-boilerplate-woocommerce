@@ -11,11 +11,17 @@ if (!class_exists('WC_Shipping_Method')) {
     }
 }
 
-if (!class_exists('Auspost_API')) {
-    class Auspost_API {
+if (!interface_exists('Rate_Client_Interface')) {
+    interface Rate_Client_Interface {
+        public function get_rates(array $shipment): array;
+    }
+}
+
+if (!class_exists('Dummy_Rate_Client')) {
+    class Dummy_Rate_Client implements Rate_Client_Interface {
         public static $rates = [];
         public static $calls = 0;
-        public function get_rates($args) {
+        public function get_rates(array $shipment): array {
             self::$calls++;
             return self::$rates;
         }
@@ -34,8 +40,14 @@ class ShippingMethodTest extends TestCase
         \WP_Mock::userFunction('wc_get_weight', [
             'return_arg' => 1,
         ]);
+        \WP_Mock::userFunction('wc_format_postcode', [
+            'return_arg' => 0,
+        ]);
         \WP_Mock::userFunction('is_wp_error', [
             'return' => false,
+        ]);
+        \WP_Mock::userFunction('WC_Validation::is_postcode', [
+            'return' => true,
         ]);
         \WP_Mock::userFunction('WC', [
             'return' => new class {
@@ -52,8 +64,8 @@ class ShippingMethodTest extends TestCase
 
         require_once __DIR__ . '/../auspost-shipping/includes/class-auspost-shipping-method.php';
 
-        Auspost_API::$rates = [];
-        Auspost_API::$calls = 0;
+        Dummy_Rate_Client::$rates = [];
+        Dummy_Rate_Client::$calls = 0;
     }
 
     protected function tearDown(): void
@@ -75,7 +87,7 @@ class ShippingMethodTest extends TestCase
 
     public function test_calculate_shipping_adds_rates_from_api()
     {
-        Auspost_API::$rates = [
+        Dummy_Rate_Client::$rates = [
             ['code' => 'EXP', 'name' => 'Express', 'price' => 10.0],
             ['code' => 'STD', 'name' => 'Standard', 'price' => 5.0],
         ];
@@ -90,6 +102,7 @@ class ShippingMethodTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $method->id = 'auspost_shipping';
+        $method->set_rate_client(new Dummy_Rate_Client());
 
         $method->expects($this->exactly(2))
             ->method('add_rate')
@@ -128,7 +141,7 @@ class ShippingMethodTest extends TestCase
 
         $method->calculate_shipping($package);
 
-        $this->assertSame(0, Auspost_API::$calls);
+        $this->assertSame(0, Dummy_Rate_Client::$calls);
     }
 
     public function test_calculate_shipping_skips_api_call_when_weight_zero()
@@ -148,6 +161,6 @@ class ShippingMethodTest extends TestCase
 
         $method->calculate_shipping($package);
 
-        $this->assertSame(0, Auspost_API::$calls);
+        $this->assertSame(0, Dummy_Rate_Client::$calls);
     }
 }
