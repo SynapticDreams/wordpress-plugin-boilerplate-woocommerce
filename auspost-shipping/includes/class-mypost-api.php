@@ -86,11 +86,10 @@ if ( ! class_exists( 'MyPost_API' ) ) {
             }
 
             $code  = wp_remote_retrieve_response_code( $response );
-            $body  = json_decode( wp_remote_retrieve_body( $response ), true );
-            $error = json_last_error();
+            $body  = wp_json_decode( wp_remote_retrieve_body( $response ), true );
             Auspost_Shipping_Logger::log( $data, array( 'code' => $code, 'body' => $body ) );
 
-            if ( JSON_ERROR_NONE !== $error ) {
+            if ( ! is_array( $body ) ) {
                 return new WP_Error( 'mypost_api_json_error', __( 'Unable to decode response from MyPost API.', 'auspost-shipping' ) );
             }
 

@@ -119,9 +119,13 @@ if ( ! class_exists( 'Auspost_API' ) ) {
          * @return array|WP_Error Array of rates or WP_Error.
          */
         public function parse_response( $body ) {
-            $data = json_decode( $body, true );
+            $data = wp_json_decode( $body, true );
 
-            if ( json_last_error() !== JSON_ERROR_NONE || empty( $data['services']['service'] ) ) {
+            if ( ! is_array( $data ) ) {
+                return new WP_Error( 'auspost_api_invalid', __( 'Unable to decode response from AusPost API.', 'auspost-shipping' ) );
+            }
+
+            if ( empty( $data['services']['service'] ) ) {
                 return new WP_Error( 'auspost_api_invalid', __( 'Invalid response from AusPost API.', 'auspost-shipping' ) );
             }
 
