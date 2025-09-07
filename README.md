@@ -7,8 +7,13 @@ This fork adds a new tab with two sections to the WooCommerce Settings page. For
 ## Contents
 
 * `.gitignore`. Used to exclude certain files from the repository.
+* `.distignore`. Excludes development and test files from distribution packages.
 * `README.md`. The file that you’re currently reading.
 * A `auspost-shipping` directory that contains the source code - a fully executable WordPress plugin.
+
+## Building
+
+When preparing the plugin for distribution, use a build process such as `wp dist-archive`. The `.distignore` file ensures that the `tests/` directory and any test configuration files are omitted from the resulting archive.
 
 ## Credits
 

@@ -1,0 +1,12 @@
+# Exclude test suite
+/tests/
+
+# Exclude test configuration files
+phpunit.xml
+phpunit.xml.dist
+phpcs.xml
+phpcs.xml.dist
+phpstan.neon
+phpstan.neon.dist
+codeception.yml
+codeception.dist.yml
