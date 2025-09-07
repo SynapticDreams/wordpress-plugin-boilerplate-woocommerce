@@ -66,7 +66,37 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
                     'default'     => __( 'AusPost Shipping', 'auspost-shipping' ),
                     'desc_tip'    => true,
                 ),
+                'pac_api_key' => array(
+                    'title'       => __( 'PAC API Key', 'auspost-shipping' ),
+                    'type'        => 'text',
+                    'description' => __( 'Key for accessing the AusPost PAC API.', 'auspost-shipping' ),
+                    'default'     => get_option( 'auspost_shipping_pac_api_key', '' ),
+                    'desc_tip'    => true,
+                ),
             );
+        }
+
+        /**
+         * Validate and save PAC API key field.
+         *
+         * @param string $key   Field key.
+         * @param string $value Submitted value.
+         * @return string Sanitized value.
+         */
+        public function validate_pac_api_key_field( $key, $value ) {
+            $value = sanitize_text_field( $value );
+
+            if ( empty( $value ) ) {
+                \WC_Admin_Settings::add_error( __( 'PAC API key is required.', 'auspost-shipping' ) );
+            } elseif ( ! preg_match( '/^[a-zA-Z0-9]+$/', $value ) ) {
+                \WC_Admin_Settings::add_error( __( 'PAC API key appears invalid.', 'auspost-shipping' ) );
+            } else {
+                \WC_Admin_Settings::add_message( __( 'PAC API key saved.', 'auspost-shipping' ) );
+            }
+
+            update_option( 'auspost_shipping_pac_api_key', $value );
+
+            return $value;
         }
 
         /**
@@ -155,8 +185,7 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
             if ( $contract_key && $contract_secret ) {
                 $this->rate_client = new Contract_Rate_Client( $contract_key, $contract_secret );
             } else {
-                $api_key           = get_option( 'auspost_shipping_auspost_api_key' );
-                $this->rate_client = new Pac_Rate_Client( $api_key );
+                $this->rate_client = new Pac_Rate_Client();
             }
 
             return $this->rate_client;

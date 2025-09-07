@@ -46,6 +46,9 @@ class ShippingMethodTest extends TestCase
         \WP_Mock::userFunction('is_wp_error', [
             'return' => false,
         ]);
+        \WP_Mock::userFunction('get_option', [
+            'return' => '',
+        ]);
         \WP_Mock::userFunction('WC_Validation::is_postcode', [
             'return' => true,
         ]);
@@ -83,6 +86,8 @@ class ShippingMethodTest extends TestCase
         $this->assertSame('yes', $method->form_fields['enabled']['default']);
         $this->assertArrayHasKey('title', $method->form_fields);
         $this->assertSame('AusPost Shipping', $method->form_fields['title']['default']);
+        $this->assertArrayHasKey('pac_api_key', $method->form_fields);
+        $this->assertSame('', $method->form_fields['pac_api_key']['default']);
     }
 
     public function test_calculate_shipping_adds_rates_from_api()

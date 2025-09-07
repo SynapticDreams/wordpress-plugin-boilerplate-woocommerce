@@ -16,6 +16,19 @@ if ( ! class_exists( 'Pac_Rate_Client' ) ) {
      */
     class Pac_Rate_Client extends Auspost_API implements Rate_Client_Interface {
         /**
+         * Constructor.
+         *
+         * @param string|null $api_key API key for PAC requests.
+         */
+        public function __construct( $api_key = null ) {
+            if ( null === $api_key ) {
+                $api_key = get_option( 'auspost_shipping_pac_api_key' );
+            }
+
+            parent::__construct( $api_key );
+        }
+
+        /**
          * Retrieve rates from the PAC service.
          *
          * Logs any WP_Error using the Auspost_Shipping_Logger and
@@ -25,6 +38,13 @@ if ( ! class_exists( 'Pac_Rate_Client' ) ) {
          * @return array List of rate arrays or empty array on failure.
          */
         public function get_rates( array $shipment ): array {
+            if ( empty( $this->api_key ) ) {
+                if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
+                    Auspost_Shipping_Logger::log( $shipment, 'Missing PAC API key.' );
+                }
+                return array();
+            }
+
             $rates = parent::get_rates( $shipment );
 
             if ( is_wp_error( $rates ) ) {
