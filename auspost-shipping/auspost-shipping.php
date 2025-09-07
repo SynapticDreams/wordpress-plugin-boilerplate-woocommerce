@@ -42,21 +42,9 @@ if (!function_exists('is_plugin_active')) {
 }
 
 /**
-* Check for the existence of WooCommerce and any other requirements
-*/
-function ausps_check_requirements() {
-    if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
-        return true;
-    } else {
-        add_action( 'admin_notices', 'ausps_missing_wc_notice' );
-        return false;
-    }
-}
-
-/**
 * Display a message advising WooCommerce is required
 */
-function ausps_missing_wc_notice() { 
+function ausps_missing_wc_notice() {
     $class = 'notice notice-error';
     $message = __( 'Auspost Shipping requires WooCommerce to be installed and active.', 'auspost-shipping' );
  
@@ -77,11 +65,9 @@ function activate_auspost_shipping() {
  * This action is documented in includes/class-auspost-shipping-deactivator.php
  */
 function deactivate_auspost_shipping() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-auspost-shipping-deactivator.php';
-	Auspost_Shipping_Deactivator::deactivate();
+        require_once plugin_dir_path( __FILE__ ) . 'includes/class-auspost-shipping-deactivator.php';
+        Auspost_Shipping_Deactivator::deactivate();
 }
-
-add_action( 'plugins_loaded', 'ausps_check_requirements' );
 
 register_activation_hook( __FILE__, 'activate_auspost_shipping' );
 register_deactivation_hook( __FILE__, 'deactivate_auspost_shipping' );
@@ -102,10 +88,12 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-auspost-shipping.php';
  * @since    1.0.0
  */
 function run_auspost_shipping() {
-    if (ausps_check_requirements()) {
+    if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
         $plugin = new Auspost_Shipping();
-        $plugin->run();        
+        $plugin->run();
+    } else {
+        add_action( 'admin_notices', 'ausps_missing_wc_notice' );
     }
 }
 
-run_auspost_shipping();
+add_action( 'plugins_loaded', 'run_auspost_shipping' );
