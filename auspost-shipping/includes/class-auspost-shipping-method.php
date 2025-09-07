@@ -65,17 +65,36 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
         /**
          * Calculate shipping for a package.
          *
+         * Builds a request to the AusPost API based on package
+         * information and maps the returned rates to WooCommerce
+         * shipping rate objects.
+         *
          * @param array $package Shipping package data.
          */
         public function calculate_shipping( $package = array() ) {
-            $rates = apply_filters( 'auspost_shipping_calculate_rates', array(), $package );
+            $api = new Auspost_API();
 
-            if ( empty( $rates ) ) {
+            $from_postcode = WC()->countries->get_base_postcode();
+            $to_postcode   = isset( $package['destination']['postcode'] ) ? $package['destination']['postcode'] : '';
+            $weight        = isset( $package['contents_weight'] ) ? wc_get_weight( $package['contents_weight'], 'kg' ) : 0;
+
+            $rates = $api->get_rates( array(
+                'from_postcode' => $from_postcode,
+                'to_postcode'   => $to_postcode,
+                'weight'        => $weight,
+            ) );
+
+            if ( is_wp_error( $rates ) || empty( $rates ) ) {
                 return;
             }
 
             foreach ( $rates as $rate ) {
-                $this->add_rate( $rate );
+                $this->add_rate( array(
+                    'id'    => $this->id . ':' . $rate['code'],
+                    'label' => $rate['name'],
+                    'cost'  => $rate['price'],
+                    'package' => $package,
+                ) );
             }
         }
     }
