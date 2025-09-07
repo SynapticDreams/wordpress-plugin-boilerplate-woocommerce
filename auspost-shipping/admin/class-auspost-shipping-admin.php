@@ -147,10 +147,15 @@ class Auspost_Shipping_Admin {
             return;
         }
 
-        $api_key    = get_option( 'auspost_shipping_mypost_business_api_key' );
-        $api_secret = get_option( 'auspost_shipping_mypost_business_api_secret' );
+       $api_key    = get_option( 'auspost_shipping_mypost_business_api_key' );
+       $api_secret = get_option( 'auspost_shipping_mypost_business_api_secret' );
 
-        $api = new MyPost_API( $api_key, $api_secret );
+       if ( empty( $api_key ) || empty( $api_secret ) ) {
+               $order->add_order_note( __( 'MyPost label error: Missing API credentials.', 'auspost-shipping' ) );
+               return;
+       }
+
+       $api = new MyPost_API( $api_key, $api_secret );
 
         $payload = array(
             'order_id' => $order->get_id(),
