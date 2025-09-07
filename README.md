@@ -15,6 +15,14 @@ This fork adds a new tab with two sections to the WooCommerce Settings page. For
 
 When preparing the plugin for distribution, use a build process such as `wp dist-archive`. The `.distignore` file ensures that the `tests/` directory and any test configuration files are omitted from the resulting archive.
 
+## Testing
+
+Run the test suite with [PHPUnit](https://phpunit.de/):
+
+```
+vendor/bin/phpunit
+```
+
 ## Credits
 
 90% of this code was developed by the following people:
