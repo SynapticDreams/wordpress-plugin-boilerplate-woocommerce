@@ -100,6 +100,24 @@ if ( ! class_exists( 'Auspost_Shipping_WC_Settings' ) ) {
                                 'desc_tip' => __( 'Secret for accessing the MyPost Business API.', 'auspost-shipping' ),
                             ),
                             array(
+                                'id'       => $prefix . 'contract_account_number',
+                                'name'     => __( 'Contract Account Number', 'auspost-shipping' ),
+                                'type'     => 'text',
+                                'desc_tip' => __( 'Account number for contracted AusPost accounts.', 'auspost-shipping' ),
+                            ),
+                            array(
+                                'id'       => $prefix . 'contract_api_key',
+                                'name'     => __( 'Contract API Key', 'auspost-shipping' ),
+                                'type'     => 'text',
+                                'desc_tip' => __( 'API key for contracted AusPost accounts.', 'auspost-shipping' ),
+                            ),
+                            array(
+                                'id'       => $prefix . 'contract_api_secret',
+                                'name'     => __( 'Contract API Secret', 'auspost-shipping' ),
+                                'type'     => 'password',
+                                'desc_tip' => __( 'API secret for contracted AusPost accounts.', 'auspost-shipping' ),
+                            ),
+                            array(
                                 'name' => __( 'API Credentials', 'auspost-shipping' ),
                                 'type' => 'sectionend',
                                 'id'   => $prefix . 'api_credentials',
