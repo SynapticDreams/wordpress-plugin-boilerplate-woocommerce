@@ -87,13 +87,17 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-auspost-shipping.php';
  *
  * @since    1.0.0
  */
-function run_auspost_shipping() {
+function ausps_check_requirements() {
     if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
         $plugin = new Auspost_Shipping();
         $plugin->run();
-    } else {
-        add_action( 'admin_notices', 'ausps_missing_wc_notice' );
+
+        return true;
     }
+
+    add_action( 'admin_notices', 'ausps_missing_wc_notice' );
+
+    return false;
 }
 
-add_action( 'plugins_loaded', 'run_auspost_shipping' );
+add_action( 'plugins_loaded', 'ausps_check_requirements' );
