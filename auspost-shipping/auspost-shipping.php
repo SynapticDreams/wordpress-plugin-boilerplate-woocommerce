@@ -37,6 +37,20 @@ if ( ! defined( 'WPINC' ) ) {
  */
 define( 'AUSPOST_SHIPPING_VERSION', '1.0.0' );
 
+if ( version_compare( PHP_VERSION, '7.0', '<' ) ) {
+    add_action(
+        'admin_notices',
+        function () {
+            $class   = 'notice notice-error';
+            $message = __( 'Auspost Shipping requires PHP 7.0 or greater.', 'auspost-shipping' );
+
+            printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+        }
+    );
+
+    return;
+}
+
 if (!function_exists('is_plugin_active')) {
     include_once(ABSPATH . '/wp-admin/includes/plugin.php');
 }
