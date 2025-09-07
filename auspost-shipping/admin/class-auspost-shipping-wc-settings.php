@@ -120,8 +120,12 @@ if ( ! class_exists( 'Auspost_Shipping_WC_Settings' ) ) {
             switch ($current_section) {
                 case 'log':
                     if ( isset( $_GET['auspost_shipping_clear_log'] ) && check_admin_referer( 'auspost_shipping_clear_log' ) ) {
-                        Auspost_Shipping_Logger::clear();
-                        echo '<div class="updated"><p>' . esc_html__( 'Log cleared.', 'auspost-shipping' ) . '</p></div>';
+                        if ( current_user_can( 'manage_woocommerce' ) ) {
+                            Auspost_Shipping_Logger::clear();
+                            echo '<div class="updated"><p>' . esc_html__( 'Log cleared.', 'auspost-shipping' ) . '</p></div>';
+                        } else {
+                            echo '<div class="error"><p>' . esc_html__( 'You do not have permission to clear the log.', 'auspost-shipping' ) . '</p></div>';
+                        }
                     }
                     $logs = Auspost_Shipping_Logger::get_logs();
                     echo '<h2>' . esc_html__( 'API Request Log', 'auspost-shipping' ) . '</h2>';
