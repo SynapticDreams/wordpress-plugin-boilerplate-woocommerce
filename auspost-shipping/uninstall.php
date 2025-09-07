@@ -27,5 +27,35 @@
 
 // If uninstall not called from WordPress, then exit.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit;
+        exit;
+}
+
+$option_names = array(
+    'auspost_shipping_auspost_api_key',
+    'auspost_shipping_mypost_business_api_key',
+    'auspost_shipping_mypost_business_api_secret',
+    'auspost_shipping_log',
+    'woocommerce_auspost_shipping_settings',
+);
+
+/**
+ * Delete plugin options for the current site.
+ */
+function auspost_shipping_delete_options() {
+    global $option_names;
+
+    foreach ( $option_names as $option_name ) {
+        delete_option( $option_name );
+    }
+}
+
+if ( is_multisite() ) {
+    $site_ids = get_sites( array( 'fields' => 'ids' ) );
+    foreach ( $site_ids as $site_id ) {
+        switch_to_blog( $site_id );
+        auspost_shipping_delete_options();
+        restore_current_blog();
+    }
+} else {
+    auspost_shipping_delete_options();
 }
