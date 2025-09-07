@@ -106,4 +106,25 @@ class PacRateClientTest extends TestCase {
 
         $this->assertSame([], $rates);
     }
+
+    public function test_get_rates_returns_empty_on_wp_error() {
+        $args = [
+            'from_postcode' => '3000',
+            'to_postcode'   => '4000',
+            'weight'        => 1,
+        ];
+
+        $error = new WP_Error( 'http_error', 'fail' );
+
+        \WP_Mock::userFunction( 'get_option', [ 'args' => ['auspost_shipping_pac_api_key'], 'return' => 'APIKEY' ] );
+        \WP_Mock::userFunction( 'get_transient', [ 'return' => false ] );
+        \WP_Mock::userFunction( 'wp_remote_get', [ 'return' => $error ] );
+        \WP_Mock::userFunction( 'is_wp_error', [ 'args' => [ $error ], 'return' => true ] );
+        \WP_Mock::userFunction( 'Auspost_Shipping_Logger::log' );
+
+        $client = new Pac_Rate_Client( 'APIKEY' );
+        $rates  = $client->get_rates( $args );
+
+        $this->assertSame( [], $rates );
+    }
 }

@@ -113,7 +113,7 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
             $destination_country = isset( $package['destination']['country'] ) ? $package['destination']['country'] : WC()->countries->get_base_country();
             $to_postcode         = isset( $package['destination']['postcode'] ) ? wc_format_postcode( $package['destination']['postcode'], $destination_country ) : '';
             $weight              = isset( $package['contents_weight'] ) ? $package['contents_weight'] : 0;
-            $boxes               = get_option( 'auspost_shipping_boxes', array() );
+            $boxes               = apply_filters( 'auspost_shipping_boxes', get_option( 'auspost_shipping_boxes', array() ), $package );
 
             if ( ! WC_Validation::is_postcode( $to_postcode, $destination_country ) ) {
                 if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
@@ -172,6 +172,7 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
                     );
                     try {
                         $rates = $this->get_rate_client()->get_rates( $shipment );
+                        $rates = apply_filters( 'auspost_shipping_available_rates', $rates, $shipment, $package );
                     } catch ( Exception $e ) {
                         if ( class_exists( 'Auspost_Shipping_Logger' ) ) {
                             Auspost_Shipping_Logger::log( $shipment, $e->getMessage() );
@@ -193,14 +194,15 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
                 }
 
                 foreach ( $totals as $rate ) {
-                    $this->add_rate(
-                        array(
-                            'id'      => $this->id . ':' . $rate['code'],
-                            'label'   => $rate['name'],
-                            'cost'    => $rate['price'],
-                            'package' => $package,
-                        )
+                    $wc_rate = array(
+                        'id'      => $this->id . ':' . $rate['code'],
+                        'label'   => $rate['name'],
+                        'cost'    => $rate['price'],
+                        'package' => $package,
                     );
+                    $wc_rate = apply_filters( 'auspost_shipping_rate', $wc_rate, $rate, $package );
+                    $this->add_rate( $wc_rate );
+                    do_action( 'auspost_shipping_rate_selected', $rate, $package );
                 }
                 return;
             }
@@ -219,6 +221,12 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
                         'weight'        => $weight,
                     )
                 );
+                $shipment = array(
+                    'from_postcode' => $from_postcode,
+                    'to_postcode'   => $to_postcode,
+                    'weight'        => $weight,
+                );
+                $rates = apply_filters( 'auspost_shipping_available_rates', $rates, $shipment, $package );
             } catch ( Exception $e ) {
                 $shipment = array(
                     'from_postcode' => $from_postcode,
@@ -237,14 +245,15 @@ if ( ! class_exists( 'Auspost_Shipping_Method' ) ) {
             }
 
             foreach ( $rates as $rate ) {
-                $this->add_rate(
-                    array(
-                        'id'      => $this->id . ':' . $rate['code'],
-                        'label'   => $rate['name'],
-                        'cost'    => $rate['price'],
-                        'package' => $package,
-                    )
+                $wc_rate = array(
+                    'id'      => $this->id . ':' . $rate['code'],
+                    'label'   => $rate['name'],
+                    'cost'    => $rate['price'],
+                    'package' => $package,
                 );
+                $wc_rate = apply_filters( 'auspost_shipping_rate', $wc_rate, $rate, $package );
+                $this->add_rate( $wc_rate );
+                do_action( 'auspost_shipping_rate_selected', $rate, $package );
             }
         }
 

@@ -43,6 +43,10 @@ class ShippingMethodTest extends TestCase
         \WP_Mock::userFunction('wc_format_postcode', [
             'return_arg' => 0,
         ]);
+        \WP_Mock::userFunction('apply_filters', [
+            'return_arg' => 1,
+        ]);
+        \WP_Mock::userFunction('do_action');
         \WP_Mock::userFunction('is_wp_error', [
             'return' => false,
         ]);

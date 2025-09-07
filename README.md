@@ -23,6 +23,44 @@ Run the test suite with [PHPUnit](https://phpunit.de/):
 vendor/bin/phpunit
 ```
 
+## API Configuration
+
+The shipping method supports both public PAC and contracted account APIs.
+1. Enter your PAC or contracted credentials in **WooCommerce → Settings → Shipping → AusPost**.
+2. Choose the appropriate account type and save your API key, account number, and secrets as required.
+
+## Box Definitions
+
+Boxes used for packing can be configured under **WooCommerce → Settings → Shipping → AusPost → Boxes**. Each box requires length, width, height, maximum weight and padding values. The smallest fitting box is used and dimensional weight is applied automatically.
+
+## Developer Hooks
+
+Developers can extend packing and rate selection using filters and actions:
+
+```php
+// Add or modify available boxes before packing.
+add_filter( 'auspost_shipping_boxes', function( $boxes ) {
+    $boxes[] = [
+        'length' => 20,
+        'width'  => 20,
+        'height' => 20,
+        'max_weight' => 10,
+        'padding' => 0,
+    ];
+    return $boxes;
+} );
+
+// Adjust rates returned from the API.
+add_filter( 'auspost_shipping_available_rates', function( $rates, $shipment ) {
+    return array_filter( $rates, fn( $rate ) => $rate['code'] !== 'EXP' );
+}, 10, 2 );
+
+// React when a rate is selected.
+add_action( 'auspost_shipping_rate_selected', function( $rate, $package ) {
+    error_log( 'Selected rate: ' . $rate['code'] );
+}, 10, 2 );
+```
+
 ## Credits
 
 90% of this code was developed by the following people:

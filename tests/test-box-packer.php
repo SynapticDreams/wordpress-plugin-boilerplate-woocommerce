@@ -40,4 +40,20 @@ class BoxPackerTest extends TestCase
         $this->assertEquals($dim, $pkg['weight']);
         $this->assertGreaterThan($actual, $pkg['weight']);
     }
+
+    public function test_multiple_boxes_packed()
+    {
+        $boxes = [
+            ['length' => 10, 'width' => 10, 'height' => 10, 'max_weight' => 5, 'padding' => 0],
+        ];
+        $items = [
+            ['length' => 10, 'width' => 10, 'height' => 10, 'weight' => 5, 'qty' => 2],
+        ];
+
+        $packer = new Box_Packer($boxes);
+        $packages = $packer->pack($items);
+
+        $this->assertCount(2, $packages);
+        $this->assertCount(0, $packer->get_unpacked_items());
+    }
 }
