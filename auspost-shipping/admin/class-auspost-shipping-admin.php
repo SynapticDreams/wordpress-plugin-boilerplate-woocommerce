@@ -73,7 +73,12 @@ class Auspost_Shipping_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/auspost-shipping-admin.css', array(), $this->version, 'all' );
+               $screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+               $allowed = array( 'woocommerce_page_wc-settings', 'shop_order', 'edit-shop_order' );
+
+               if ( $screen && in_array( $screen->id, $allowed, true ) ) {
+                       wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/auspost-shipping-admin.css', array(), $this->version, 'all' );
+               }
 
 	}
 
@@ -96,7 +101,12 @@ class Auspost_Shipping_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/auspost-shipping-admin.js', array( 'jquery' ), $this->version, false );
+               $screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+               $allowed = array( 'woocommerce_page_wc-settings', 'shop_order', 'edit-shop_order' );
+
+               if ( $screen && in_array( $screen->id, $allowed, true ) ) {
+                       wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/auspost-shipping-admin.js', array( 'jquery' ), $this->version, false );
+               }
 
 	}
 
