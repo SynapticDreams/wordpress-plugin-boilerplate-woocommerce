@@ -129,6 +129,14 @@ class Auspost_Shipping_Admin {
      * @param WC_Order $order Order object.
      */
     public function process_mypost_create_label( $order ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'woocommerce-order-actions' ) ) {
+            return;
+        }
+
         $api_key    = get_option( 'auspost_shipping_mypost_business_api_key' );
         $api_secret = get_option( 'auspost_shipping_mypost_business_api_secret' );
 
@@ -191,6 +199,10 @@ class Auspost_Shipping_Admin {
      */
     public function handle_bulk_actions( $redirect_to, $action, $order_ids ) {
         if ( 'mypost_create_labels' !== $action ) {
+            return $redirect_to;
+        }
+
+        if ( empty( $_REQUEST['mypost_create_labels_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['mypost_create_labels_nonce'] ) ), 'mypost_create_labels' ) ) {
             return $redirect_to;
         }
 
