@@ -90,9 +90,9 @@ if ( ! class_exists( 'Auspost_API' ) ) {
          * hitting the API repeatedly with the same request.
          *
          * @param array $args Request arguments.
-         * @return array|WP_Error Array of rate data or WP_Error on failure.
+         * @return array|WP_Error Array of rate data or a WP_Error on failure.
          */
-        public function get_rates( $args ) {
+        public function get_rates( array $args ): array|WP_Error {
             $url = $this->build_request_url( $args );
             if ( is_wp_error( $url ) ) {
                 return $url;
